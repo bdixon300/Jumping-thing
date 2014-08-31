@@ -14,6 +14,7 @@ var style;
 var text;
 var highscore = 0;
 var highscoreDisplay;
+var playerDead = false; 
 function preload()
 {
     game.load.image('player', 'jora.png');
@@ -26,7 +27,7 @@ function preload()
     game.load.image('downbar2', 'downbar2.png');
     game.load.image('downbar3', 'downbar3.png');
     game.load.image('downbar4', 'downbar4.png');
-    game.load.image('gate', 'highscoregate.png');
+ 
     
 }
 
@@ -50,13 +51,18 @@ function create()
     game.camera.follow(player);
     player.body.gravity.y = 700;
     player.body.velocity.x = 100;
+    
 
     ground1 = game.add.sprite(0, 680, 'ground');
     ground1.scale.setTo(20, 1);
+    game.physics.arcade.enable(ground1);
+    ground1.enableBody = true;
+    ground1.body.immovable = true;
     ground2 = game.add.sprite(0, 0, 'ground');
     ground2.scale.setTo(20, 2);
-    
-    
+    game.physics.arcade.enable(ground2);
+    ground2.enableBody = true;
+    ground2.body.immovable = true;
 
         
         
@@ -66,6 +72,7 @@ function create()
      style = { font: "20px Arial", fill: "#ff0044", };
      highscoreDisplay = game.add.text(200, 700, text, style);
      
+      game.time.events.loop(2900, highScore, this);
      
     
     }
@@ -83,8 +90,8 @@ if (game.input.activePointer.isDown)
    
             game.physics.arcade.collide(player, upbars, playerDie);
             game.physics.arcade.collide(player, downbars, playerDie);
-            game.physics.arcade.overlap(player, gate, highScore);
-    
+             game.physics.arcade.collide(player, ground1, playerDie);
+             game.physics.arcade.collide(player, ground2, playerDie);
     
     highscoreDisplay.x = player.x;
     
@@ -117,14 +124,17 @@ var createBars = function()
 var playerDie = function()
 {
     player.kill();
-    
+    playerDead = true;
 };
 
 
 
 var highScore = function()
 {
+    if (!playerDead)
+    {
     highscore = highscore + 1;
     highscoreDisplay.text = "Score: " + highscore;
+    }
 };
 

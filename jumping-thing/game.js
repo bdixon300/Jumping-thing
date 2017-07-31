@@ -62,7 +62,7 @@ function create() {
     game.time.events.loop(2900, highScore, this);
   }
 
-
+// Function runs at 60fps roughly to check for collisions
 function update() {
   if (game.input.activePointer.isDown) {
       player.body.velocity.y = -250;
@@ -74,6 +74,7 @@ function update() {
   highscoreDisplay.x = player.x;
 }
 
+// Function generates bars as obstacles for game
 var createBars = function() {
   for (var i = 2; i < 500; i++) {
     random = game.rnd.integerInRange(0, 2);
@@ -93,13 +94,13 @@ var createBars = function() {
   }
 };
 
+// Function kills player
 var playerDie = function() {
   player.kill();
   playerDead = true;
 };
 
-
-
+// Function updates highscore for game
 var highScore = function() {
     if (!playerDead) {
       highscore = highscore + 1;
